@@ -14,38 +14,40 @@ def send_request(url, method="GET", data=None):
         print(f"Request failed: {e}")
         return None
 
-def test_csrf(url, payload):
+def test_csrf(url, payloads):
     """Test for Cross-Site Request Forgery (CSRF) vulnerabilities."""
     table = PrettyTable(["URL", "CSRF Payload", "Status Code", "CSRF Detected", "Error Message"])
     table.align["CSRF Detected"] = "l"
 
     test_url = f"{url}/submit"
-    data = {"csrf_token": payload}
-    try:
-        response = send_request(test_url, method="POST", data=data)
-        if response:
-            status_code = response.status_code
-            csrf_detected = "No"
-            error_message = "N/A"
 
-            if payload in response.text:
-                csrf_detected = "Yes"
-                table.add_row([test_url, payload, status_code, csrf_detected, error_message])
-                print(f"       [+] CSRF detected: {test_url}")
-            elif status_code == 401 or status_code == 403:
-                table.add_row([test_url, payload, status_code, "Unauthorized", error_message])
-                print(f"       [!] Unauthorized access: {test_url}")
-            elif status_code == 404:
-                table.add_row([test_url, payload, status_code, "Not Found", error_message])
-                print(f"       [!] CSRF payload not found: {test_url}")
+    for payload in payloads:
+        data = {"csrf_token": payload}
+        try:
+            response = send_request(test_url, method="POST", data=data)
+            if response:
+                status_code = response.status_code
+                csrf_detected = "No"
+                error_message = "N/A"
+
+                if payload in response.text:
+                    csrf_detected = "Yes"
+                    table.add_row([test_url, payload, status_code, csrf_detected, error_message])
+                    print(f"       [+] CSRF detected: {test_url}")
+                elif status_code == 401 or status_code == 403:
+                    table.add_row([test_url, payload, status_code, "Unauthorized", error_message])
+                    print(f"       [!] Unauthorized access: {test_url}")
+                elif status_code == 404:
+                    table.add_row([test_url, payload, status_code, "Not Found", error_message])
+                    print(f"       [!] CSRF payload not found: {test_url}")
+                else:
+                    table.add_row([test_url, payload, status_code, csrf_detected, error_message])
             else:
-                table.add_row([test_url, payload, status_code, csrf_detected, error_message])
-        else:
-            table.add_row([test_url, payload, "No Response", csrf_detected, error_message])
-    except requests.exceptions.RequestException as e:
-        table.add_row([test_url, payload, "Error", "N/A", str(e)])
-        print(f"       [!] Error sending request to {test_url}: {e}")
-    time.sleep(0.1)
+                table.add_row([test_url, payload, "No Response", csrf_detected, error_message])
+        except requests.exceptions.RequestException as e:
+            table.add_row([test_url, payload, "Error", "N/A", str(e)])
+            print(f"       [!] Error sending request to {test_url}: {e}")
+        time.sleep(0.1)
 
     print(table)
 
@@ -77,10 +79,12 @@ def test_csrf(url, payload):
 
     print(additional_table)
 
+payloads = [
+    "<img src='x' onerror='alert(\"CSRF\")'>",
+    "<script>alert('CSRF')</script>",
+    "<iframe src='x' onload='alert(\"CSRF\")'></iframe>",
+]
 
-payload = [
-        "<img src='x' onerror='alert(\"CSRF\")'>",
-        "<script>alert('CSRF')</script>",
-        "<iframe src='x' onload='alert(\"CSRF\")'></iframe>",
-    ]
-
+if __name__ == "__main__":
+    url = input("Enter the URL to test: ")
+    test_csrf(url, payloads)
