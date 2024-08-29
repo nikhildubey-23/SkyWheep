@@ -95,7 +95,7 @@ def test_path_traversal(url, payloads):
     # Print the local file inclusion results
     print(additional_table)
 
-target_url = input("Enter the target URL: ")
+
 path_traversal_payloads = [
     "..%2f",  # URL-encoded ../
     "..%2f..%2f",  # URL-encoded ../../
@@ -104,3 +104,7 @@ path_traversal_payloads = [
     "..%5c",  # URL-encoded ..\
     "..%5c..%5c",  # URL-encoded ..\..
     ]
+
+if __name__ == "__main__":
+    url = input("Enter the URL to test: ")
+    test_path_traversal(url, path_traversal_payloads)
