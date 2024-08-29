@@ -86,3 +86,6 @@ ssrf_payloads = [
         "http://your.internal.service",  # Internal service
         "http://192.168.1.1",  # Common internal IP
     ]
+if __name__ == "__main__":
+    target_url = input("Enter the target URL: ")
+    test_ssrf(target_url, ssrf_payloads)
