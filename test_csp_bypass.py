@@ -64,4 +64,8 @@ def test_csp_bypass(url):
 
     print(table)
     time.sleep(0.1)
+import main   
+if __name__ == "__main__":
+    test_csp_bypass(main.target_url)
+
 
