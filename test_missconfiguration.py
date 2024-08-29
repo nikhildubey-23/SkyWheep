@@ -11,33 +11,36 @@ def send_request(url):
         print(f"Request failed: {e}")
         return None
 
-def test_misconfig(url, misconfig_type):
-    """Test for a specific security misconfiguration."""
+def test_misconfig(url, misconfig_types):
+    """Test for specific security misconfigurations."""
     table = PrettyTable(["URL", "Misconfiguration Type", "Status Code", "Misconfiguration Detected", "Error Message"])
     table.align["Misconfiguration Detected"] = "l"
 
     response = send_request(url)
     if response:
         status_code = response.status_code
-        misconfig_detected = "No"
         error_message = "N/A"
 
-        if misconfig_type == "Server" and "server" in response.headers:
-            misconfig_detected = "Yes"
-            table.add_row([url, misconfig_type, status_code, misconfig_detected, error_message])
-            print(f"    [+] Security Misconfiguration detected: {url} ({misconfig_type})")
-        elif misconfig_type == "X-Powered-By" and "x-powered-by" in response.headers:
-            misconfig_detected = "Yes"
-            table.add_row([url, misconfig_type, status_code, misconfig_detected, error_message])
-            print(f"    [+] Security Misconfiguration detected: {url} ({misconfig_type})")
-        elif misconfig_type == "X-AspNet-Version" and "x-asp-net-version" in response.headers:
-            misconfig_detected = "Yes"
-            table.add_row([url, misconfig_type, status_code, misconfig_detected, error_message])
-            print(f"    [+] Security Misconfiguration detected: {url} ({misconfig_type})")
-        else:
-            table.add_row([url, misconfig_type, status_code, misconfig_detected, error_message])
+        for misconfig_type in misconfig_types:
+            misconfig_detected = "No"
+
+            # Check for specific misconfiguration types
+            if misconfig_type == "Server" and "server" in response.headers:
+                misconfig_detected = "Yes"
+                table.add_row([url, misconfig_type, status_code, misconfig_detected, error_message])
+                print(f"    [+] Security Misconfiguration detected: {url} ({misconfig_type})")
+            elif misconfig_type == "X-Powered-By" and "x-powered-by" in response.headers:
+                misconfig_detected = "Yes"
+                table.add_row([url, misconfig_type, status_code, misconfig_detected, error_message])
+                print(f"    [+] Security Misconfiguration detected: {url} ({misconfig_type})")
+            elif misconfig_type == "X-AspNet-Version" and "x-asp-net-version" in response.headers:
+                misconfig_detected = "Yes"
+                table.add_row([url, misconfig_type, status_code, misconfig_detected, error_message])
+                print(f"    [+] Security Misconfiguration detected: {url} ({misconfig_type})")
+            else:
+                table.add_row([url, misconfig_type, status_code, misconfig_detected, error_message])
     else:
-        table.add_row([url, misconfig_type, "No Response", misconfig_detected, error_message])
+        table.add_row([url, misconfig_types, "No Response", "No", error_message])
     
     print(table)
 
@@ -72,10 +75,12 @@ def test_misconfig(url, misconfig_type):
 
     print(additional_table)
 
-misconfig_type = [
+misconfig_types = [
         "Server",
         "X-Powered-By",
         "X-AspNet-Version",
     ]
-    
-    
+
+if __name__ == "__main__":
+    url = input("Enter the URL to test: ")
+    test_misconfig(url, misconfig_types)
