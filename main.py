@@ -8,8 +8,16 @@ import test_idor as idor
 import test_csrf as csrf
 import test_path_traversal as pt
 
-
 target_url = input("Enter the target url : ")
 
-sqli.test_sql_injection(target_url, sqli.sql_payloads) 
-# still in working process 
+print(" 1. For Server Side Attack")
+print(" 2. For Client Side Attack")
+
+attack_selection = input("Enter the attack number you want to perform : ")
+
+if attack_selection == "1":
+    print("you have selected Server Side Attack")
+    
+elif attack_selection == "2":
+    print("you have selected Client Side Attack")
+    
