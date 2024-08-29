@@ -93,3 +93,7 @@ object_ids = [
     "101",  # Example object ID
     "200",  # Example object ID
     ]
+
+if __name__ == "__main__":
+    url = input("Enter the URL to test: ")
+    test_idor(url, object_ids)
