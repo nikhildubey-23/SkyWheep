@@ -125,3 +125,7 @@ if use_hydra == 'yes':
     user_list = input("Enter the path to the user list file: ")
     password_list = input("Enter the path to the password list file: ")
     run_hydra(target_url, user_list, password_list)
+    
+if __name__ == "__main__":
+    target_url = input("Enter the target url : ")
+    test_broken_auth(target_url, credentials)
